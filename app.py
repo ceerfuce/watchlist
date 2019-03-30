@@ -38,7 +38,7 @@ def forge():
     """Generate fake data."""
     db.create_all()
     # 全局的两个变量移动到这个函数内
-    name = 'Grey Li'
+    name = 'ceerfuce'
     movies = [
         {'title': 'My Neighbor Totoro', 'year': '1988'},
         {'title': 'Dead Poets Society', 'year': '1989'},
@@ -72,7 +72,7 @@ class User(db.Model):
 class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(60))
-    year = db.Column(db.String(4))
+    year = db.Column(db.String(20))
 
 
 '''    
@@ -121,7 +121,7 @@ def index():
         title = request.form.get('title') # 传入表单对应输入字段的 name 值
         year = request.form.get('year')
         # 验证数据
-        if not title or not year or len(year) > 4 or len(title) > 60:
+        if not title or not year or len(year) > 20 or len(title) > 60:
             flash('Invalid input.') # 显示错误提示
             return redirect(url_for('index')) # 重定向回主页
         # 保存表单数据到数据库
@@ -148,7 +148,7 @@ def edit(movie_id):
         title = request.form['title']
         year = request.form['year']
 
-        if not title or not year or len(year) > 4 or len(title) > 60:
+        if not title or not year or len(year) > 20 or len(title) > 60:
             flash('Invalid input.')
             return redirect(url_for('edit', movie_id=movie_id))  # 重定向回对应的编辑页面
 
