@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+
+import requests
+import bs4
+
 from flask import render_template, request, url_for, redirect, flash
 # from flask_login import login_user, login_required, logout_user, current_user
 
@@ -36,7 +40,9 @@ def index():
     # return render_template('index.html', user=user, movies=movies)
     # 使用模板上下文处理函数后，删除user变量定义，
     # 并删除在render_template函数里传入的关键字参数
-    return render_template('index.html', movies=movies)
+    data = datatable(movies)
+    tableinfo = gentable(data)
+    return render_template('index.html', movies=movies, tableinfo=tableinfo)
 
     
 @app.route('/movie/edit/<int:movie_id>', methods=['GET', 'POST'])
@@ -68,3 +74,54 @@ def delete(movie_id):
     db.session.commit()  # 提交数据库会话
     flash('Item deleted.')
     return redirect(url_for('index'))  # 重定向回主页
+
+    
+# 功能函数
+headers={'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.137 Safari/537.36 LBBROWSER'} 
+
+# 从雪球网页标题获取品种信息
+def getxqwebdata(code):
+    url = 'https://xueqiu.com/S/%s' % code
+    res = requests.get(url, headers=headers)
+    res.encoding = 'utf-8'
+    try:
+        res.raise_for_status()
+    except Exception as exc:
+        print('There was a problem %s' % exc)
+    # return res.text
+    soup = bs4.BeautifulSoup(res.text, 'html.parser')
+    data = soup.title.string.split()
+    cell = code, data[0], data[1], data[2][1:-1]
+    print(cell)
+    return cell
+
+# 将两个品种配对放在一个列表中    
+def datapair(fund, index):
+    # cellpair = getxqwebdata(fund), getxqwebdata(index)
+    cellpair = list(getxqwebdata(fund))
+    cellpair.extend(list(getxqwebdata(index)))
+    print(cellpair)
+    return cellpair
+
+# 要查询的所有品种对的列表，查询完后放在二维列表中    
+def datatable(table):
+    finaldata = []
+    for item in table:
+        finaldata.append(datapair(item.title, item.year))
+        # finaldata.append(datapair(item['title'], item['year']))
+    return  finaldata
+
+# 生成表格的HTML文本    
+def gentable(data):
+    table_item = ['基金代码','基金名称','价格','涨跌幅','指数代码','指数名称','价格','涨跌幅']
+    table_text= '<table><tr>'
+    for item in table_item:
+        table_text=table_text+'<td>'+item+'</td>'
+    table_text=table_text+'</tr>'
+    for row in data:
+        table_text=table_text+'<tr>'
+        for item in row:
+            table_text=table_text+'<td>'+item+'</td>'
+        table_text=table_text+'</tr>'
+    table_text=table_text+'</table>'
+    return table_text    
