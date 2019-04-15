@@ -116,7 +116,7 @@ def gentable(data):
     table_item = ['基金代码','基金名称','价格','涨跌幅','指数代码','指数名称','价格','涨跌幅']
     table_text= '<table><tr>'
     for item in table_item:
-        table_text=table_text+'<td>'+item+'</td>'
+        table_text=table_text+'<th>'+item+'</th>'
     table_text=table_text+'</tr>'
     for row in data:
         table_text=table_text+'<tr>'

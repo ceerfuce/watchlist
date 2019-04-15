@@ -3,6 +3,7 @@ body {
     max-width: 980px;
     font-size: 14px;
     font-family: Helvetica, Arial, sans-serif;
+    background-color: #F0F0F6;
 }
 
 footer {
@@ -120,4 +121,32 @@ input[name=year] {
 
 .inline-form {
     display: inline;
+}
+
+table {
+
+    border-collapse: collapse;
+    border-spacing: 0;
+    padding: 4px;
+    width: 100%;
+}
+
+td {
+    
+    font-size: 20px;
+    padding: 4px;
+    text-align: left;
+    border: 1px solid #CCC;
+    
+}
+
+th {
+
+    color: #EEE;
+    background-color: #12A;
+    padding: 4px;
+    font-size: 20px;
+    text-align: left;
+    border: 1px solid #CCC;
+    
 }
